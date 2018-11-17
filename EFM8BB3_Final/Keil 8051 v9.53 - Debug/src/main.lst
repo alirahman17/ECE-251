@@ -1,0 +1,123 @@
+C51 COMPILER V9.53.0.0   MAIN                                                              05/08/2017 20:08:17 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\src\main.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.53\BIN\C51.exe C:\Users\Ali Rah
+                    -man\SimplicityStudio\v4_workspace\EFM8BB3_SpaceInvaders\src\main.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL
+                    -(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) DEFINE(DEBUG=1) INTVECTOR(0X0000) INTPROMOTE INCDIR(C:\Users\Ali Rahman\SimplicitySt
+                    -udio\v4_workspace\EFM8BB3_SpaceInvaders\inc;C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_SpaceInvaders\inc\
+                    -config;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/bsp;C:/SiliconLabs/SimplicityStudio/v4
+                    -/developer/sdks/8051/v4.0.3//kits/EFM8BB3_SLSTK2022A/config;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.
+                    -3//Device/EFM8BB3/peripheral_driver/inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drive
+                    -rs/efm8_joystick;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_rgb_led;C:/Sili
+                    -conLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc;C:/SiliconLabs/Simplicit
+                    -yStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc/graphics;C:/SiliconLabs/SimplicityStudio/
+                    -v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc/config;C:/SiliconLabs/SimplicityStudio/v4/develop
+                    -er/sdks/8051/v4.0.3//Device/shared/si8051base;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//Device/EFM8
+                    -BB3/inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_retargetserial) PRINT(.\
+                    -src\main.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\main.OBJ)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // main.c
+   3          //-----------------------------------------------------------------------------
+   4          // Copyright 2014 Silicon Laboratories, Inc.
+   5          // http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+   6          //
+   7          // Program Description:
+   8          //
+   9          // This program demonstrates a Space Invaders game on the EFM8BB3 STK using
+  10          // the LCD, joystick, push buttons, and RGB LED.
+  11          //
+  12          //-----------------------------------------------------------------------------
+  13          // How To Test: EFM8BB3 STK
+  14          //-----------------------------------------------------------------------------
+  15          // 1) Place the switch in "AEM" mode.
+  16          // 2) Connect the EFM8BB3 STK board to a PC using a mini USB cable.
+  17          // 3) Compile and download code to the EFM8BB3 STK board.
+  18          //    In Simplicity Studio IDE, select Run -> Debug from the menu bar,
+  19          //    click the Debug button in the quick menu, or press F11.
+  20          // 4) Run the code.
+  21          //    In Simplicity Studio IDE, select Run -> Resume from the menu bar,
+  22          //    click the Resume button in the quick menu, or press F8.
+  23          // 5) The Space Invaders game should start.
+  24          //
+  25          // Target:         EFM8BB3
+  26          // Tool chain:     Generic
+  27          //
+  28          // Release 0.1 (CM)
+  29          //    - Initial Revision
+  30          //    - 10 OCT 2014
+  31          //
+  32          //-----------------------------------------------------------------------------
+  33          // Resources
+  34          //-----------------------------------------------------------------------------
+  35          // SYSCLK - 24.5 MHz HFOSC0 / 1
+  36          // ADC0   - 10-bit
+  37          // SPI0   - 1 MHz
+  38          // Timer2 - 2 MHz (SPI CS delay)
+  39          // Timer3 - 1 kHz (1 ms tick)
+  40          // P0.1 - CS (Active High)
+  41          // P0.2 - push button
+  42          // P0.3 - push button
+  43          // P0.6 - SCK
+C51 COMPILER V9.53.0.0   MAIN                                                              05/08/2017 20:08:17 PAGE 2   
+
+  44          // P1.0 - MOSI
+  45          // P1.4 - LED Green
+  46          // P1.5 - LED Blue
+  47          // P1.6 - LED Red
+  48          // P1.7 - Joystick (analog voltage divider)
+  49          // P2.3 - Display enable
+  50          //
+  51          
+  52          /////////////////////////////////////////////////////////////////////////////
+  53          // Includes
+  54          /////////////////////////////////////////////////////////////////////////////
+  55          
+  56          #include "bsp.h"
+  57          #include "InitDevice.h"
+  58          #include "disp.h"
+  59          #include "space_invaders.h"
+  60          
+  61          SI_SBIT (BC_EN, SFR_P2, 2);            // Board Controller Enable
+  62          #define BC_DISCONNECTED 0              // 0 = Board Controller disconnected
+  63                                                 //     to EFM8 UART pins
+  64          #define BC_CONNECTED    1              // 1 = Board Controller connected
+  65                                                 //     to EFM8 UART pins
+  66          
+  67          //---------------------------------------------------------------------------
+  68          // main() Routine
+  69          // --------------------------------------------------------------------------
+  70          void main (void)
+  71          {
+  72   1              // Enter default mode
+  73   1              enter_DefaultMode_from_RESET();
+  74   1              BC_EN = BC_CONNECTED;
+  75   1              // Enable all interrupts
+  76   1              IE_EA = 1;
+  77   1              DISP_Init();
+  78   1          SpaceInvaders_Main();
+  79   1              while (1);
+  80   1      
+  81   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     15    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,285 @@
+C51 COMPILER V9.53.0.0   SPACE_INVADERS                                                    05/08/2017 21:13:26 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE SPACE_INVADERS
+OBJECT MODULE PLACED IN .\src\space_invaders.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.53\BIN\C51.exe C:\Users\Ali Rah
+                    -man\SimplicityStudio\v4_workspace\EFM8BB3_SpaceInvaders\src\space_invaders.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WA
+                    -RNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) DEFINE(DEBUG=1) INTVECTOR(0X0000) INTPROMOTE INCDIR(C:\Users\Ali Rahman\Si
+                    -mplicityStudio\v4_workspace\EFM8BB3_SpaceInvaders\inc;C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_SpaceInv
+                    -aders\inc\config;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/bsp;C:/SiliconLabs/Simplicit
+                    -yStudio/v4/developer/sdks/8051/v4.0.3//kits/EFM8BB3_SLSTK2022A/config;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/
+                    -8051/v4.0.3//Device/EFM8BB3/peripheral_driver/inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/co
+                    -mmon/drivers/efm8_joystick;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_rgb_l
+                    -ed;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc;C:/SiliconLabs
+                    -/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc/graphics;C:/SiliconLabs/Simplic
+                    -ityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_memory_lcd/inc/config;C:/SiliconLabs/SimplicityStudio/
+                    -v4/developer/sdks/8051/v4.0.3//Device/shared/si8051base;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//D
+                    -evice/EFM8BB3/inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//kits/common/drivers/efm8_retargetserial
+                    -) PRINT(.\src\space_invaders.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\space_invaders.OBJ)
+
+line level    source
+
+   1          /**************************************************************************//**
+   2           * Copyright (c) 2015 by Silicon Laboratories Inc. All rights reserved.
+   3           *
+   4           * http://developer.silabs.com/legal/version/v11/Silicon_Labs_Software_License_Agreement.txt
+   5           *****************************************************************************/
+   6          /////////////////////////////////////////////////////////////////////////////
+   7          // Space_invaders.c
+   8          /////////////////////////////////////////////////////////////////////////////
+   9          
+  10          /////////////////////////////////////////////////////////////////////////////
+  11          // Includes
+  12          /////////////////////////////////////////////////////////////////////////////
+  13          
+  14          #include "bsp.h"
+  15          #include "utils.h"
+  16          #include "rgb_led.h"
+  17          #include "joystick.h"
+  18          #include "tick.h"
+  19          #include "disp.h"
+  20          #include "render.h"
+  21          #include "space_invaders.h"
+  22          #include <string.h>
+  23          #include "retargetserial.h"
+  24          #include <stdlib.h>
+  25          
+  26          // Generic line buffer
+  27          SI_SEGMENT_VARIABLE(Line[DISP_BUF_SIZE], uint8_t, RENDER_LINE_SEG);
+  28          
+  29          /////////////////////////////////////////////////////////////////////////////
+  30          // Prototypes
+  31          /////////////////////////////////////////////////////////////////////////////
+  32          
+  33          void InputPlayer();
+  34          
+  35          /////////////////////////////////////////////////////////////////////////////
+  36          // Functions - Input
+  37          /////////////////////////////////////////////////////////////////////////////
+  38          
+  39          char outputstr[1];
+  40          char output[16] = {0};
+  41          int xdata hextext;
+  42          int z;
+  43          char xdata savedinfo[26][16] = {0};
+C51 COMPILER V9.53.0.0   SPACE_INVADERS                                                    05/08/2017 21:13:26 PAGE 2   
+
+  44          char xdata savedinfohex[26][16] = {0};
+  45          char xdata testbuffer[16] = {0};
+  46          int x;
+  47          char xdata outputbuffer[16] = {0};
+  48          int n;
+  49          int u;
+  50          int y;
+  51          int linenum;
+  52          int linenumhex;
+  53          int stringlength;
+  54          int stringlengthhex;
+  55          int rownumber;
+  56          int rownumberhex;
+  57          int hex;
+  58          char outputstrhex[1] = {0};
+  59          char xdata outputhex[16] = {0};
+  60          //-----------------------------------------------------------------------------
+  61          // drawScreenText
+  62          //-----------------------------------------------------------------------------
+  63          //
+  64          // Show one line of text on the screen
+  65          //
+  66          // str - pointer to string text (0 - 21 characters) to display
+  67          // rowNum - row number of the screen (0 - 127)
+  68          // fontScale - font scaler (1 - 4)
+  69          //
+  70          static void drawScreenText(SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG), uint8_t rowNum)
+  71          {
+  72   1        uint8_t i;
+  73   1      
+  74   1        for (i = 0; i < FONT_HEIGHT; i++)
+  75   1        {
+  76   2          RENDER_ClrLine(Line);
+  77   2          RENDER_StrLine(Line, 4, i, str);
+  78   2          DISP_WriteLine(rowNum + i, Line);
+  79   2        }
+  80   1      }
+  81          static void drawSplash(void)
+  82          {
+  83   1              uint16_t ticks = GetTickCount();
+  84   1      
+  85   1              while (((GetTickCount() - ticks) < 30)
+  86   1                              );
+  87   1      }
+  88          int m;
+  89          int i;
+  90          
+  91          //FUNCTIONS
+  92          int insertionmode;
+  93          static void Scroll(void){
+  94   1          DISP_ClearAll();
+  95   1          if(P1_B2 == 0){
+  96   2              for(n = y; n < rownumber; n++){
+  97   3              //if(hextext != 1) {
+  98   3              memcpy(outputbuffer, savedinfo[n], 16);
+  99   3              drawScreenText(outputbuffer, m);
+ 100   3          m+=8;
+ 101   3              }
+ 102   2          }
+ 103   1          if(P1_B2 == 1){
+ 104   2              for(n = y; n < rownumberhex; n++){
+ 105   3              //if(hextext != 1) {
+ 106   3              memcpy(outputbuffer, savedinfohex[n], 16);
+C51 COMPILER V9.53.0.0   SPACE_INVADERS                                                    05/08/2017 21:13:26 PAGE 3   
+
+ 107   3              drawScreenText(outputbuffer, m);
+ 108   3          m+=8;
+ 109   3              }
+ 110   2          }
+ 111   1          insertionmode = 0;
+ 112   1      
+ 113   1              //}
+ 114   1      }
+ 115          
+ 116          int j = 0;
+ 117          int k = 0;
+ 118          int o;
+ 119          
+ 120          
+ 121          void InputPlayer()
+ 122          {
+ 123   1          uint32_t mv;
+ 124   1          uint8_t dir;
+ 125   1      
+ 126   1          ADC0CN0_ADBUSY = 1;
+ 127   1          while (!ADC0CN0_ADINT);
+ 128   1          ADC0CN0_ADINT = 0;
+ 129   1      
+ 130   1          mv = ((uint32_t)ADC0) * 3300 / 1024;
+ 131   1      
+ 132   1          dir = JOYSTICK_convert_mv_to_direction(mv);
+ 133   1      
+ 134   1          if (dir == JOYSTICK_N)
+ 135   1          {
+ 136   2              y--;
+ 137   2              Scroll();
+ 138   2          }
+ 139   1      
+ 140   1          if (dir == JOYSTICK_S)
+ 141   1          {
+ 142   2              y++;
+ 143   2              Scroll();
+ 144   2          }
+ 145   1      
+ 146   1          if (BSP_PB0 == BSP_PB_PRESSED)
+ 147   1          {
+ 148   2              insertionmode = 0;
+ 149   2          }
+ 150   1          if (BSP_PB1 == BSP_PB_PRESSED)
+ 151   1          {
+ 152   2              P1_B2 = !P1_B2;
+ 153   2              Scroll();
+ 154   2      
+ 155   2          }
+ 156   1      }
+ 157          
+ 158          /////////////////////////////////////////////////////////////////////////////
+ 159          // Functions - Main
+ 160          /////////////////////////////////////////////////////////////////////////////
+ 161          
+ 162          void SpaceInvaders_Main(void)
+ 163          {
+ 164   1                unsigned char inputchar;
+ 165   1      
+ 166   1                hextext = 1;
+ 167   1                insertionmode = 0;
+ 168   1                linenum = 0;
+ 169   1                rownumber = 0;
+C51 COMPILER V9.53.0.0   SPACE_INVADERS                                                    05/08/2017 21:13:26 PAGE 4   
+
+ 170   1                i = 0;
+ 171   1                n = 0;
+ 172   1                y = 0;
+ 173   1                m = 0;
+ 174   1                o = 0;
+ 175   1                stringlength = 0;
+ 176   1                DISP_ClearAll();
+ 177   1                SCON0_TI = 1;
+ 178   1                SCON0_RI = 1;
+ 179   1                P1_B2 = 0;
+ 180   1                while(1)
+ 181   1                {
+ 182   2                        drawSplash();
+ 183   2                        InputPlayer();
+ 184   2                        if (P1_B2 == 1){
+ 185   3                                //drawScreenText("a",1);
+ 186   3                        }
+ 187   2                        if (P1_B2 == 0){
+ 188   3                                               // drawScreenText("b",1);
+ 189   3                                        }
+ 190   2                        if(insertionmode == 0){
+ 191   3                        if(inputchar == 9){
+ 192   4                                insertionmode = 1;
+ 193   4                        }
+ 194   3                    RETARGET_PRINTF ("\nEnter character: ");
+ 195   3                    inputchar = getchar();
+ 196   3                        RETARGET_PRINTF ("\nCharacter entered: %c", inputchar);
+ 197   3                        RETARGET_PRINTF ("\n     Value in Hex: %bx", inputchar);
+ 198   3                    if(linenum>120){
+ 199   4                        y++;
+ 200   4                        Scroll();
+ 201   4                        m = 0;
+ 202   4                        stringlength = 0;
+ 203   4                        linenum = 120;
+ 204   4                    }
+ 205   3      
+ 206   3                    RETARGET_SPRINTF (outputstr, "%c", inputchar);
+ 207   3                    //if(P1_B2 == 1){
+ 208   3                    RETARGET_SPRINTF (outputstrhex, "%bx", inputchar);
+ 209   3                    //}
+ 210   3                    strcat(savedinfohex[rownumberhex],&outputstrhex);
+ 211   3                    strcat(savedinfo[rownumber],&outputstr);
+ 212   3                    if(P1_B2 == 0){
+ 213   4                    drawScreenText(output, linenum);
+ 214   4                    }
+ 215   3                    if(P1_B2 == 1){
+ 216   4                          drawScreenText(outputhex, linenum);
+ 217   4                            }
+ 218   3                    strcat(output,&outputstr);
+ 219   3                    strcat(outputhex,&outputstrhex);
+ 220   3                    stringlength=strlen(output);
+ 221   3                    stringlengthhex=strlen(outputhex);
+ 222   3                                if(stringlength>16){
+ 223   4                                        memset(output,0,16);
+ 224   4                                        strcat(output,&outputstr);
+ 225   4                                        rownumber++;
+ 226   4                                        linenum+=8;
+ 227   4                                }
+ 228   3                              if(stringlengthhex>16){
+ 229   4                                                                memset(outputhex,0,16);
+ 230   4                                                                strcat(outputhex,&outputstrhex);
+ 231   4                                                                rownumberhex+=2;
+ 232   4                                                                linenumhex+=8;
+C51 COMPILER V9.53.0.0   SPACE_INVADERS                                                    05/08/2017 21:13:26 PAGE 5   
+
+ 233   4                              }
+ 234   3                        }
+ 235   2      
+ 236   2                }
+ 237   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    854    ----
+   CONSTANT SIZE    =     73    ----
+   XDATA SIZE       =    882    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     54       9
+   IDATA SIZE       =     16    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

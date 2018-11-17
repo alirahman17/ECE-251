@@ -1,0 +1,790 @@
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 1   
+
+
+C51 COMPILER V9.53.0.0, COMPILATION OF MODULE RENDER
+OBJECT MODULE PLACED IN .\lib\bsp\efm8_memory_lcd\src\render.OBJ
+COMPILER INVOKED BY: c:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.53\BIN\C51.exe C:\Users\Ali Rah
+                    -man\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src\render.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(L
+                    -ARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SPEED) DEFINE(DEBUG=1) INTVECTOR(0X0000) INTPROMOTE INCDIR(C:\Users\Ali R
+                    -ahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\inc;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//Dev
+                    -ice/shared/si8051base;C:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.0.3//Device/EFM8BB3/inc) PRINT(.\lib\bsp
+                    -\efm8_memory_lcd\src\render.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\lib\bsp\efm8_memory_lcd\src\render.OBJ)
+
+line level    source
+
+   1          /////////////////////////////////////////////////////////////////////////////
+   2          // Render.c
+   3          /////////////////////////////////////////////////////////////////////////////
+   4          
+   5          /////////////////////////////////////////////////////////////////////////////
+   6          // Includes
+   7          /////////////////////////////////////////////////////////////////////////////
+   8          
+   9          #include "bsp.h"
+  10          #include "disp.h"
+*** WARNING C318 IN LINE 10 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: can't open file 'disp.h'
+  11          #include "render.h"
+*** WARNING C318 IN LINE 11 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: can't open file 'render.h'
+  12          #include <string.h>
+  13          
+  14          #if RENDER_STR_LINE_BUILD || RENDER_LARGE_STR_LINE_BUILD
+*** WARNING C322 IN LINE 14 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+*** WARNING C322 IN LINE 14 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+              #include "thinfont.h"
+              #endif
+  17          
+  18          #if RENDER_NUMERIC_BUILD
+*** WARNING C322 IN LINE 18 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+              #include "thinfont_numeric.h"
+              #endif
+  21          
+  22          #if RENDER_VERTICAL_STR_LINE_BUILD
+*** WARNING C322 IN LINE 22 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+              #include "verticalthinfont.h"
+              #endif
+  25          
+  26          /////////////////////////////////////////////////////////////////////////////
+  27          // Functions
+  28          /////////////////////////////////////////////////////////////////////////////
+  29          
+  30          /***************************************************************************//**
+  31           * @brief Return the size of the string in pixels
+  32           *
+  33           * @param str a null-terminated string
+  34           *
+  35           * @return The width of a string in pixels as rendered by ::RENDER_StrLine()
+  36           *
+  37           *****************************************************************************/
+  38          uint8_t RENDER_GetStrSize(
+  39                  SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG))
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 2   
+
+*** ERROR C141 IN LINE 39 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: syntax error near '*', expected ')'
+  40          {
+  41   1          return (strlen(str) * FONT_WIDTH + 2);
+*** ERROR C202 IN LINE 41 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'str': undefined identifier
+  42   1      }
+  43          
+  44          /***************************************************************************//**
+  45           * @brief Clear the contents of a line buffer, setting its contents to the
+  46           * background color
+  47           *
+  48           * @param line a line buffer to clear
+  49           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+  50           *
+  51           *****************************************************************************/
+  52          void RENDER_ClrLine(
+  53                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG))
+*** ERROR C141 IN LINE 53 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: syntax error near '*', expected ')'
+  54          {
+  55   1          memset(line, DISP_BACKGROUND_COLOR, DISP_BUF_SIZE);
+*** ERROR C202 IN LINE 55 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'line': undefined identifier
+  56   1      }
+  57          
+  58          /***************************************************************************//**
+  59           * @brief Set a pixel in the line buffer to the foreground color
+  60           *
+  61           * @param line a line buffer to clear
+  62           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+  63           * @param posx the x-position of the pixel to turn on [0, ::DISP_WIDTH)
+  64           *
+  65           *****************************************************************************/
+  66          void RENDER_PixelLine(
+  67                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+*** ERROR C141 IN LINE 67 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: syntax error near '*', expected ')'
+  68                  uint8_t posx)
+  69          {
+  70   1      #if DISP_FOREGROUND_COLOR == COLOR_BLACK
+*** WARNING C322 IN LINE 70 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+*** WARNING C322 IN LINE 70 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\s
+             -rc\render.c: unknown identifier
+  71   1          line[posx / 8] &= ~(0x80 >> (posx % 8));
+*** ERROR C202 IN LINE 71 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'posx': undefined identifier
+  72   1      #else
+                  line[posx / 8] |= (0x80 >> (posx % 8));
+              #endif
+  75   1      }
+  76          
+  77          /***************************************************************************//**
+  78           * @brief Set the pixels of a line segment of the range
+  79           * [xstart, xstop] in the line buffer to the foreground color
+  80           *
+  81           * @param line a line buffer to clear
+  82           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+  83           * @param xstart the starting x-position of the line segment [0, ::DISP_WIDTH)
+  84           * @param xstop the stopping x-position of the line segment [0, ::DISP_WIDTH)
+  85           *
+  86           *****************************************************************************/
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 3   
+
+  87          void RENDER_LineSegmentLine(
+  88                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+*** ERROR C141 IN LINE 88 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: syntax error near '*', expected ')'
+  89                  uint8_t xstart,
+  90                  uint8_t xstop)
+  91          {
+  92   1          uint8_t x;
+  93   1          uint8_t swap;
+  94   1      
+  95   1          // Swap the start/stop values
+  96   1          if (xstart > xstop)
+*** ERROR C202 IN LINE 96 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'xstart': undefined identifier
+  97   1          {
+  98   2              swap = xstop;
+*** ERROR C202 IN LINE 98 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'xstop': undefined identifier
+  99   2              xstop = xstart;
+*** ERROR C202 IN LINE 99 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\src
+             -\render.c: 'xstop': undefined identifier
+ 100   2              xstart = swap;
+*** ERROR C202 IN LINE 100 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'xstart': undefined identifier
+ 101   2          }
+ 102   1      
+ 103   1          for (x = xstart; x <= xstop; x++)
+*** ERROR C202 IN LINE 103 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'xstart': undefined identifier
+ 104   1          {
+ 105   2              RENDER_PixelLine(line, x);
+*** ERROR C202 IN LINE 105 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'line': undefined identifier
+ 106   2          }
+ 107   1      }
+ 108          
+ 109          /***************************************************************************//**
+ 110           * @brief Write a string to a line buffer horizontally
+ 111           * (text reads from left to right, up facing up)
+ 112           *
+ 113           * @param line a line buffer to write to
+ 114           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 115           * @param posx the LCD x position for the left side of the text block
+ 116           * x = [0, ::DISP_WIDTH-STR_WIDTH)
+ 117           * @param posy the y position for the text row relative to the top side of the
+ 118           * text block y = [0, ::DISP_HEIGHT-STR_HEIGHT)
+ 119           * @param str a null-terminated string to write
+ 120           *
+ 121           * Example
+ 122           * -------
+ 123           *
+ 124           * ~~~
+ 125           *                   LCD TOP
+ 126           * RR _____________________________________
+ 127           * 00|                                     |
+ 128           * 01|                                     |
+ 129           * 02|                                     |
+ 130           * 03|   ____________________              |
+ 131           * 04|  | ___  ___  ___  ___ |< y=0        |
+ 132           * 05|  |  |  |    |      |  |             |
+ 133           * 06|  |  |  |---  ---   |  |< y=HEIGHT/2 |
+ 134           * 07|  |  |  |___  ___|  |  |             |
+ 135           * 08|  |____________________|< y=HEIGHT   |
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 4   
+
+ 136           * 09|  ^                    ^             |
+ 137           * 10|  x                    x+WIDTH       |
+ 138           * 11|_____________________________________|
+ 139           *   C0000000000111111111122222222223333333
+ 140           *   C0123456789012345678901234567890123456
+ 141           * ~~~
+ 142           *
+ 143           * To display the text, "TEST" horizontally on the LCD with the
+ 144           * top-left corner of the text block located on the LCD at
+ 145           * row = 4, col = 3, call:
+ 146           *
+ 147           * ~~~{.c}
+ 148           * for (y = 0; y < FONT_HEIGHT; y++)
+ 149           * {
+ 150           *    RENDER_StrLine(line, 3, y, "TEST");
+ 151           *    DISP_WriteLine(4+y, line);
+ 152           * }
+ 153           * ~~~
+ 154           *
+ 155           *****************************************************************************/
+ 156          #if RENDER_STR_LINE_BUILD
+*** WARNING C322 IN LINE 156 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+              void RENDER_StrLine(
+                      SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+                      uint8_t posx,
+                      uint8_t posy,
+                      SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG))
+              {
+                  char c;
+                  uint8_t font_byte;
+              
+                  SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, RENDER_LINE_SEG);
+              
+                  // String is null-terminated
+                  while (*str != '\0')
+                  {
+                      c = *str;
+              
+                      // Check for non-printable characters
+                      if (c < ' ' || c > '~')
+                      {
+                        c = ' ';
+                      }
+              
+                      // Don't write past the end of the line
+                      if (posx > (DISP_WIDTH - FONT_MAP_SPACING))
+                      {
+                          str++;
+                          posx += FONT_WIDTH;
+                          continue;
+                      }
+              
+                      font_byte = thinfont_bits[(c - ' ') + thinfont_width / 8 * posy];
+              
+                      // Calculate position in line buffer
+                      line16 = (uint16_t*)(&line[posx / 8]);
+              
+                      // WARNING: This could be very dangerous without proper
+                      // bounds checking as this technically touches the
+                      // 17th byte of the 16 byte line buffer.
+                      //
+                      // However, we only allow posx to be 120 at max, which
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 5   
+
+                      // leaves div = 15, rem = 0, which means we effectively don't
+                      // change the value of the 17th byte
+              
+                      *line16 &= ~(0xFF00 >> posx % 8);
+                      *line16 |= (((uint16_t)font_byte << 8) >> (posx % 8));
+              
+                      str++;
+                      posx += FONT_WIDTH;
+                  }
+              }
+              #endif
+ 208          
+ 209          /***************************************************************************//**
+ 210           * @brief Write a string to a line buffer
+ 211           *
+ 212           * @param line a line buffer to write to
+ 213           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 214           * @param posx the pixel x position to start writing [0 - ::DISP_WIDTH)
+ 215           * @param enlarged_font_byte enlarged font byte that is inserted into line buffer
+ 216           * @param line16 16 bit variable used to insert into line buffer so no byte falls
+ 217           *        in between two bytes in line buffer
+ 218           *
+ 219           *****************************************************************************/
+ 220          static void RENDER_byte(
+ 221                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+*** ERROR C141 IN LINE 221 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: syntax error near '*', expected ')'
+ 222                  uint8_t posx,
+ 223                  uint8_t enlarged_font_byte,
+ 224                  uint16_t* line16)
+ 225          {
+ 226   1              // Calculate position in line buffer
+ 227   1              line16 = (uint16_t*)(&line[posx / 8]);
+*** ERROR C202 IN LINE 227 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'line16': undefined identifier
+ 228   1      
+ 229   1              // WARNING: This could be very dangerous without proper
+ 230   1              // bounds checking as this technically touches the
+ 231   1              // 17th byte of the 16 byte line buffer.
+ 232   1              //
+ 233   1              // However, we only allow posx to be 120 at max, which
+ 234   1              // leaves div = 15, rem = 0, which means we effectively don't
+ 235   1              // change the value of the 17th byte
+ 236   1      
+ 237   1              *line16 &= ~(0xFF00 >> posx % 8);
+*** ERROR C202 IN LINE 237 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'line16': undefined identifier
+ 238   1              *line16 |= (((uint16_t)enlarged_font_byte << 8) >> (posx % 8));
+*** ERROR C202 IN LINE 238 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'line16': undefined identifier
+ 239   1      }
+ 240          
+ 241          /***************************************************************************//**
+ 242           * @brief Write a string to a line buffer horizontally
+ 243           * (text reads from left to right, up facing up)
+ 244           *
+ 245           * @param line a line buffer to write to
+ 246           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 247           * @param posx the LCD x position for the left side of the text block
+ 248           * x = [0, ::DISP_WIDTH-STR_WIDTH)
+ 249           * @param posy the y position for the text row relative to the top side of the
+ 250           * text block y = [0, ::DISP_HEIGHT-STR_HEIGHT)
+ 251           * @param str a null-terminated string to write
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 6   
+
+ 252           * @param fontScale can be enlarged from 2x to 4x. However, if larger than 5x, this
+ 253           *        function only renders 4x
+ 254           *
+ 255           ******************************************************************************/
+ 256          #if RENDER_LARGE_STR_LINE_BUILD
+*** WARNING C322 IN LINE 256 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+              void RENDER_Large_StrLine(
+                      SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+                      uint8_t posx,
+                      uint8_t posy,
+                      SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG),
+                      uint8_t fontScale)
+              {
+                  char c;
+                  uint8_t font_byte;
+                  uint8_t i;
+                  uint8_t shiftOffset;
+                  uint32_t enlarged_font_byte;
+              
+                  SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, SI_SEG_XDATA);
+              
+                  // String is null-terminated
+                  while (*str != '\0')
+                  {
+                      c = *str;
+              
+                      // Check for non-printable characters
+                      if (c < ' ' || c > '~' + 1)
+                      {
+                        c = ' ';
+                      }
+              
+                      // Don't write past the end of the line
+                      if (posx > (DISP_WIDTH - (FONT_MAP_SPACING * fontScale)))
+                      {
+                          str++;
+                          posx += FONT_WIDTH * fontScale;
+                          continue;
+                      }
+              
+                      font_byte = thinfont_bits[(c - ' ') + thinfont_width / 8 * posy];
+              
+                      enlarged_font_byte = 0;
+                      for( i = 0; i < 8; i++) //for every bit in font_byte
+                      {
+                              if(font_byte & 0x01)
+                              {
+                                      if(fontScale == 1)
+                                      {
+                                              enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0x80000000);
+                                      }
+                                      else if(fontScale == 2)
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xC0000000);
+                                              }
+                                              else if(fontScale == 3)
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xE0000000);
+                                              }
+                                              else
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xF0000000);
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 7   
+
+                                              }
+                              }
+                              else
+                              {
+                                      enlarged_font_byte = (enlarged_font_byte >> fontScale);
+                              }
+                              font_byte = font_byte >> 1;
+                      }
+              
+                      for(i = 0; i < fontScale; i++)  //Number of bytes of a 32 bit variable
+                      {
+                              shiftOffset = 32 - (8 * (i + 1));       //start with top byte move down to last byte
+                              RENDER_byte(line, posx + (8 * i), (uint8_t)((enlarged_font_byte >> shiftOffset) & TO_BYTE_MASK), 
+             -line16);
+                      }
+              
+                      str++;
+                      posx += FONT_WIDTH * fontScale;
+                  }
+              }
+              #endif
+ 333          
+ 334          /***************************************************************************//**
+ 335           * @brief Write numeric string to line buffer ('0'-'9' and ':')
+ 336           *
+ 337           * @param line a line buffer to write to
+ 338           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 339           * @param posx the LCD x position for the left side of the text block
+ 340           * x = [0, ::DISP_WIDTH-STR_WIDTH)
+ 341           * @param posy the y position for the text row relative to the top side of the
+ 342           * text block y = [0, ::DISP_HEIGHT-STR_HEIGHT)
+ 343           * @param str a null-terminated string to write
+ 344           * @param fontScale can be enlarged from 2x to 4x. However, if larger than 5x, this
+ 345           *        function only renders 4x
+ 346           *
+ 347           ******************************************************************************/
+ 348          #if RENDER_NUMERIC_BUILD
+*** WARNING C322 IN LINE 348 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+              void RENDER_Numeric(
+                      SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+                      uint8_t posx,
+                      uint8_t posy,
+                      SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG),
+                      uint8_t fontScale)
+              {
+                  char c;
+                  uint8_t font_byte;
+                  uint8_t i;
+                  uint8_t shiftOffset;
+                  uint32_t enlarged_font_byte;
+              
+                  SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, SI_SEG_XDATA);
+              
+                  // String is null-terminated
+                  while (*str != '\0')
+                  {
+                      c = *str;
+              
+                      // Check for non-printable characters
+                      if (c < ' ' || c > '~' + 1)
+                      {
+                        c = ' ';
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 8   
+
+                      }
+              
+                      // Don't write past the end of the line
+                      if (posx > (DISP_WIDTH - (FONT_MAP_SPACING * fontScale)))
+                      {
+                          str++;
+                          posx += FONT_WIDTH * fontScale;
+                          continue;
+                      }
+              
+                      font_byte = thinfont_numeric_bits[(c - '/') + thinfont_numeric_width / 8 * posy];
+              
+                      enlarged_font_byte = 0;
+                      for( i = 0; i < 8; i++) //for every bit in font_byte
+                      {
+                              if(font_byte & 0x01)
+                              {
+                                      if(fontScale == 1)
+                                      {
+                                              enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0x80000000);
+                                      }
+                                      else if(fontScale == 2)
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xC0000000);
+                                              }
+                                              else if(fontScale == 3)
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xE0000000);
+                                              }
+                                              else
+                                              {
+                                                      enlarged_font_byte = ((enlarged_font_byte >> fontScale) | 0xF0000000);
+                                              }
+                              }
+                              else
+                              {
+                                      enlarged_font_byte = (enlarged_font_byte >> fontScale);
+                              }
+                              font_byte = font_byte >> 1;
+                      }
+              
+                      for(i = 0; i < fontScale; i++)  //Number of bytes of a 32 bit variable
+                      {
+                              shiftOffset = 32 - (8 * (i + 1));       //start with top byte move down to last byte
+                              RENDER_byte(line, posx + (8 * i), (uint8_t)((enlarged_font_byte >> shiftOffset) & TO_BYTE_MASK), 
+             -line16);
+                      }
+              
+                      str++;
+                      posx += FONT_WIDTH * fontScale;
+                  }
+              }
+              #endif
+ 425          
+ 426          /***************************************************************************//**
+ 427           * @brief Write a string to a line buffer vertically (CCW 90 degrees)
+ 428           * (text reads from bottom to top, up facing left)
+ 429           *
+ 430           * @param line a line buffer to write to
+ 431           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 432           * @param posx the LCD x position for the left side of the text block
+ 433           * x = [0, ::DISP_WIDTH-STR_WIDTH)
+ 434           * @param posy the y position for the text row relative to the left side of the
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 9   
+
+ 435           * first character y = [0, ::DISP_HEIGHT-STR_HEIGHT)
+ 436           * @param str a null-terminated string to write
+ 437           *
+ 438           * Example
+ 439           * -------
+ 440           *
+ 441           * ~~~
+ 442           *            LCD TOP
+ 443           * RR ________________________
+ 444           * 00|                        |
+ 445           * 01|                        |
+ 446           * 02|      _____             |
+ 447           * 03|     |     |< y=WIDTH   |
+ 448           * 04|     ||--- |            |
+ 449           * 05|     |   _ |            |
+ 450           * 06|     ||_| ||            |
+ 451           * 07|     |     |< y=WIDTH/2 |
+ 452           * 08|     ||_|_||            |
+ 453           * 09|     |     |            |
+ 454           * 10|     ||--- |            |
+ 455           * 11|     |_____|< y=0       |
+ 456           * 12|     ^     ^            |
+ 457           * 13|     x     x+HEIGHT     |
+ 458           * 14|________________________|
+ 459           *   C000000000011111111112222
+ 460           *   C012345678901234567890123
+ 461           * ~~~
+ 462           *
+ 463           * To display the text, "TEST" vertically on the LCD with the
+ 464           * top-left corner of the text block located on the LCD at
+ 465           * row = 11, col = 5, call:
+ 466           *
+ 467           * ~~~{.c}
+ 468           * for (y = 0; y < RENDER_GetStrSize("TEST"); y++)
+ 469           * {
+ 470           *    RENDER_VerticalStrLine(line, 5, y, "TEST");
+ 471           *    DISP_WriteLine(11 - y, line);
+ 472           * }
+ 473           * ~~~
+ 474           *
+ 475           * Note: This is an example; actual fonts may be larger/smaller.
+ 476           * In this example, ::RENDER_GetStrSize("TEST") would return the text block
+ 477           * width of 9.
+ 478           *
+ 479           ******************************************************************************/
+ 480          #if RENDER_VERTICAL_STR_LINE_BUILD
+*** WARNING C322 IN LINE 480 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+              void RENDER_VerticalStrLine(
+                      SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+                      uint8_t posx,
+                      uint8_t posy,
+                      SI_VARIABLE_SEGMENT_POINTER(str, char, RENDER_STR_SEG))
+              {
+                  char c;
+                  uint8_t font_byte;
+                  uint8_t width;
+                  uint8_t charIndex;
+                  uint8_t charRow;
+                  uint16_t index;
+              
+                  SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, RENDER_LINE_SEG);
+              
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 10  
+
+                  width = RENDER_GetStrSize(str);
+              
+                  // Invalid y-value
+                  if (posy >= width || posy >= DISP_HEIGHT)
+                      return;
+              
+                  // Figure out which character in the string is on the line at the
+                  // specified y-value
+                  charIndex = posy / FONT_WIDTH;
+                  charRow = posy % FONT_WIDTH;
+              
+                  if (charIndex >= strlen(str))
+                  {
+                      charIndex--;
+                      charRow += FONT_WIDTH;
+                  }
+              
+                  c = str[charIndex];
+              
+                  // Check for non-printable characters
+                  if (c < ' ' || c > '~')
+                  {
+                    c = ' ';
+                  }
+              
+                  index = ((((verticalthinfont_height/FONT_MAP_SPACING)-1) - (c - ' ')) * FONT_MAP_SPACING) + (7 - charR
+             -ow);
+                  font_byte = verticalthinfont_bits[index];
+              
+                  // Calculate position in line buffer
+                  line16 = (uint16_t*)(&line[posx / 8]);
+              
+                  // WARNING: This could be very dangerous without proper
+                  // bounds checking as this technically touches the
+                  // 17th byte of the 16 byte line buffer.
+                  //
+                  // However, we only allow posx to be 120 at max, which
+                  // leaves div = 15, rem = 0, which means we effectively don't
+                  // change the value of the 17th byte
+              
+                  *line16 &= ~(0xFF00 >> posx % 8);
+                  *line16 |= (((uint16_t)font_byte << 8) >> (posx % 8));
+              }
+              #endif
+ 539          
+ 540          /***************************************************************************//**
+ 541           * @brief Write a sprite to a line buffer
+ 542           *
+ 543           * @param line a line buffer to write to
+ 544           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 545           * @param posx the pixel x position to start writing [0, ::DISP_WIDTH)
+ 546           * @param posy the pixel y position in the sprite currently being
+ 547           * written [0, SPRITE_HEIGHT)
+ 548           * @param sprite a pointer to a sprite array (segment = ::RENDER_SPRITE_SEG)
+ 549           * @param spriteWidth sprite width in pixels (must be divisible by 8)
+ 550           *
+ 551           ******************************************************************************/
+ 552          void RENDER_SpriteLine(
+ 553                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+*** ERROR C141 IN LINE 553 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: syntax error near '*', expected ')'
+ 554                  uint8_t posx,
+ 555                  uint8_t posy,
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 11  
+
+ 556                  SI_VARIABLE_SEGMENT_POINTER(sprite, uint8_t, RENDER_SPRITE_SEG),
+ 557                  uint8_t spriteWidth)
+ 558          {
+ 559   1          uint8_t i;
+ 560   1          uint8_t sprite_byte;
+ 561   1      
+ 562   1          SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, RENDER_LINE_SEG);
+*** ERROR C231 IN LINE 562 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'RENDER_LINE_SEG': redefinition
+*** ERROR C141 IN LINE 562 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: syntax error near '*'
+ 563   1      
+ 564   1          // Don't write past the end of the line
+ 565   1          if (posx > (DISP_WIDTH - spriteWidth))
+*** ERROR C202 IN LINE 565 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 566   1          {
+ 567   2              return;
+ 568   2          }
+ 569   1      
+ 570   1          for (i = 0; i < spriteWidth / 8; i++)
+*** ERROR C202 IN LINE 570 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'spriteWidth': undefined identifier
+ 571   1          {
+ 572   2              sprite_byte = sprite[i + spriteWidth / 8 * posy];
+*** ERROR C202 IN LINE 572 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'spriteWidth': undefined identifier
+ 573   2      
+ 574   2              // Calculate position in line buffer
+ 575   2              line16 = (uint16_t*)(&line[posx / 8]);
+*** ERROR C202 IN LINE 575 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 576   2      
+ 577   2              // WARNING: This could be very dangerous without proper
+ 578   2              // bounds checking as this technically touches the
+ 579   2              // 17th byte of the 16 byte line buffer.
+ 580   2              //
+ 581   2              // However, we only allow posx to be 120 at max, which
+ 582   2              // leaves div = 15, rem = 0, which means we effectively don't
+ 583   2              // change the value of the 17th byte
+ 584   2      
+ 585   2              *line16 &= ~(0xFF00 >> posx % 8);
+*** ERROR C202 IN LINE 585 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 586   2              *line16 |= (((uint16_t)sprite_byte << 8) >> (posx % 8));
+*** ERROR C202 IN LINE 586 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 587   2      
+ 588   2              posx += 8;
+*** ERROR C202 IN LINE 588 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 589   2          }
+ 590   1      }
+ 591          
+ 592          /***************************************************************************//**
+ 593           * @brief Write a sprite to a line buffer, only overwriting the
+ 594           * foreground pixels
+ 595           *
+ 596           * @param line a line buffer to write to
+ 597           *        (length = ::DISP_BUF_SIZE; segment = ::RENDER_LINE_SEG)
+ 598           * @param posx the pixel x position to start writing [0, ::DISP_WIDTH)
+ 599           * @param posy the pixel y position in the sprite currently being
+ 600           * written [0, SPRITE_HEIGHT)
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 12  
+
+ 601           * @param sprite a pointer to a sprite array (segment = ::RENDER_SPRITE_SEG)
+ 602           * @param spriteWidth sprite width in pixels (must be divisible by 8)
+ 603           *
+ 604           ******************************************************************************/
+ 605          void RENDER_SpriteLineForeground(
+ 606                  SI_VARIABLE_SEGMENT_POINTER(line, uint8_t, RENDER_LINE_SEG),
+*** ERROR C141 IN LINE 606 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: syntax error near '*', expected ')'
+ 607                  uint8_t posx,
+ 608                  uint8_t posy,
+ 609                  SI_VARIABLE_SEGMENT_POINTER(sprite, uint8_t, RENDER_SPRITE_SEG),
+ 610                  uint8_t spriteWidth)
+ 611          {
+ 612   1          uint8_t i;
+ 613   1          uint8_t sprite_byte;
+ 614   1      
+ 615   1          SI_VARIABLE_SEGMENT_POINTER(line16, uint16_t, RENDER_LINE_SEG);
+*** ERROR C231 IN LINE 615 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'RENDER_LINE_SEG': redefinition
+*** ERROR C141 IN LINE 615 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: syntax error near '*'
+ 616   1      
+ 617   1          // Don't write past the end of the line
+ 618   1          if (posx > (DISP_WIDTH - spriteWidth))
+*** ERROR C202 IN LINE 618 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 619   1          {
+ 620   2              return;
+ 621   2          }
+ 622   1      
+ 623   1          for (i = 0; i < spriteWidth / 8; i++)
+*** ERROR C202 IN LINE 623 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'spriteWidth': undefined identifier
+ 624   1          {
+ 625   2              sprite_byte = sprite[i + spriteWidth / 8 * posy];
+*** ERROR C202 IN LINE 625 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'spriteWidth': undefined identifier
+ 626   2      
+ 627   2              // Calculate position in line buffer
+ 628   2              line16 = (uint16_t*)(&line[posx / 8]);
+*** ERROR C202 IN LINE 628 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 629   2      
+ 630   2              // WARNING: This could be very dangerous without proper
+ 631   2              // bounds checking as this technically touches the
+ 632   2              // 17th byte of the 16 byte line buffer.
+ 633   2              //
+ 634   2              // However, we only allow posx to be 120 at max, which
+ 635   2              // leaves div = 15, rem = 0, which means we effectively don't
+ 636   2              // change the value of the 17th byte
+ 637   2      
+ 638   2      #if DISP_FOREGROUND_COLOR == COLOR_BLACK
+*** WARNING C322 IN LINE 638 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+*** WARNING C322 IN LINE 638 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\
+             -src\render.c: unknown identifier
+ 639   2              sprite_byte = ~sprite_byte;
+ 640   2              *line16 &= ~(((uint16_t)sprite_byte << 8) >> (posx % 8));
+*** ERROR C202 IN LINE 640 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 641   2      #else
+                      *line16 |= (((uint16_t)sprite_byte << 8) >> (posx % 8));
+              #endif
+C51 COMPILER V9.53.0.0   RENDER                                                            03/21/2017 23:26:52 PAGE 13  
+
+ 644   2      
+ 645   2              posx += 8;
+*** ERROR C202 IN LINE 645 OF C:\Users\Ali Rahman\SimplicityStudio\v4_workspace\EFM8BB3_DAC_2\lib\bsp\efm8_memory_lcd\sr
+             -c\render.c: 'posx': undefined identifier
+ 646   2          }
+ 647   1      }
+
+C51 COMPILATION COMPLETE.  14 WARNING(S),  36 ERROR(S)
